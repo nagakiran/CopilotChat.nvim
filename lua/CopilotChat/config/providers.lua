@@ -296,43 +296,43 @@ M.github_models = {
     }
   end,
 
-  get_models = function(headers)
-    local response, err =
-      utils.curl_post('https://api.catalog.azureml.ms/asset-gallery/v1.0/models', {
-        headers = headers,
-        json_request = true,
-        json_response = true,
-        body = {
-          filters = {
-            { field = 'freePlayground', values = { 'true' }, operator = 'eq' },
-            { field = 'labels', values = { 'latest' }, operator = 'eq' },
-          },
-          order = {
-            { field = 'displayName', direction = 'asc' },
-          },
-        },
-      })
-
-    if err then
-      error(err)
-    end
-
-    return vim
-      .iter(response.body.summaries)
-      :filter(function(model)
-        return vim.tbl_contains(model.inferenceTasks, 'chat-completion')
-      end)
-      :map(function(model)
-        return {
-          id = model.name,
-          name = model.displayName,
-          tokenizer = 'o200k_base',
-          max_input_tokens = model.modelLimits.textLimits.inputContextWindow,
-          max_output_tokens = model.modelLimits.textLimits.maxOutputTokens,
-        }
-      end)
-      :totable()
-  end,
+  -- get_models = function(headers)
+  --   local response, err =
+  --     utils.curl_post('https://api.catalog.azureml.ms/asset-gallery/v1.0/models', {
+  --       headers = headers,
+  --       json_request = true,
+  --       json_response = true,
+  --       body = {
+  --         filters = {
+  --           { field = 'freePlayground', values = { 'true' }, operator = 'eq' },
+  --           { field = 'labels', values = { 'latest' }, operator = 'eq' },
+  --         },
+  --         order = {
+  --           { field = 'displayName', direction = 'asc' },
+  --         },
+  --       },
+  --     })
+  --
+  --   if err then
+  --     error(err)
+  --   end
+  --
+  --   return vim
+  --     .iter(response.body.summaries)
+  --     :filter(function(model)
+  --       return vim.tbl_contains(model.inferenceTasks, 'chat-completion')
+  --     end)
+  --     :map(function(model)
+  --       return {
+  --         id = model.name,
+  --         name = model.displayName,
+  --         tokenizer = 'o200k_base',
+  --         max_input_tokens = model.modelLimits.textLimits.inputContextWindow,
+  --         max_output_tokens = model.modelLimits.textLimits.maxOutputTokens,
+  --       }
+  --     end)
+  --     :totable()
+  -- end,
 
   prepare_input = M.copilot.prepare_input,
   prepare_output = M.copilot.prepare_output,
